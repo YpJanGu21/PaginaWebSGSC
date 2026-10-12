@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safe area (notch iPhone) */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Tablas con scroll horizontal en móvil */
+.tabla-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Evita el zoom automático de iOS al tocar los campos del formulario */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+:root {
+  --bg: #f5f0e8;
+  --bg-secondary: #ebe5d9;
+  --surface: #ffffff;
+  --surface-2: #f0ece4;
+  --border: #d8d2c8;
+  --text: #1a2744;
+  --text-muted: #6b7c99;
+  --teal: #1a9e93;
+  --teal-light: #e6f7f6;
+  --yellow: #f5c518;
+  --yellow-dark: #d4a800;
+  --navy: #1a2744;
+  --red: #e53e3e;
+  --green: #38a169;
+  --blue: #3182ce;
+}
+
+.dark {
+  --bg: #0a1628;
+  --bg-secondary: #071020;
+  --surface: #112240;
+  --surface-2: #162a52;
+  --border: #1d3557;
+  --text: #e8edf5;
+  --text-muted: #6b84a6;
+  --teal: #2bbfaf;
+  --teal-light: #0d3340;
+  --yellow: #f5c518;
+  --yellow-dark: #d4a800;
+  --navy: #0a1628;
+  --red: #fc8181;
+  --green: #68d391;
+  --blue: #63b3ed;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'DM Sans', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Recharts tooltip */
+.recharts-tooltip-wrapper { font-family: 'Inter', sans-serif !important; }
+
+/* Custom checkbox */
+label:has(> input[type="checkbox"]:checked) .checkbox-box {
+  border-color: var(--teal) !important;
+  background: var(--teal) !important;
+}
+label:has(> input[type="checkbox"]:checked) .checkbox-box svg {
+  opacity: 1 !important;
+}

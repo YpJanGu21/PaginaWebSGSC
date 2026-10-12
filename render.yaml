@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: sgsc-api-cet
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/salud
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
