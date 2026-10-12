@@ -1,5 +1,25 @@
-const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
+const ENV_API = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
 const TIMEOUT_MS = 6000;
+
+let baseCache: string | null = null;
+
+async function cargarBase(): Promise<string> {
+  if (baseCache !== null) return baseCache;
+  let base = ENV_API;
+  try {
+    const respuesta = await fetch("/config.json", { cache: "no-store" });
+    if (respuesta.ok) {
+      const cuerpo = await respuesta.json();
+      if (typeof cuerpo?.apiUrl === "string" && cuerpo.apiUrl.trim()) {
+        base = cuerpo.apiUrl.trim().replace(/\/+$/, "");
+      }
+    }
+  } catch {
+    // sin config.json: usamos la variable de entorno
+  }
+  baseCache = base;
+  return base;
+}
 
 export class ApiError extends Error {
   status: number;
@@ -10,10 +30,11 @@ export class ApiError extends Error {
 }
 
 async function pedir<T>(path: string, opciones: RequestInit = {}): Promise<T> {
+  const base = await cargarBase();
   const control = new AbortController();
   const temporizador = setTimeout(() => control.abort(), TIMEOUT_MS);
   try {
-    const respuesta = await fetch(`${API_BASE}${path}`, {
+    const respuesta = await fetch(`${base}${path}`, {
       ...opciones,
       headers: { "Content-Type": "application/json", ...(opciones.headers ?? {}) },
       signal: control.signal,

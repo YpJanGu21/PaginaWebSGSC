@@ -14,8 +14,8 @@ export default function AvisoDatos() {
         }}
       >
         <strong>Modo local:</strong> no se encontró la API de solicitudes, así que los registros se guardan en este
-        dispositivo. Para guardarlos en la base de datos SQLite, ejecuta <code>npm run server</code> en tu equipo o
-        define la variable <code>VITE_API_URL</code> apuntando a tu servidor desplegado.
+        dispositivo. Para guardarlos en la base de datos SQLite, ejecuta <code>npm run server</code> y define la URL de
+        la API en el archivo <code>config.json</code> (o usa la variable <code>VITE_API_URL</code> al compilar).
       </div>
     );
   }
