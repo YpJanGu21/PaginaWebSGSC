@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme";
 import { useAuth } from "../context/AuthContext";
-import cetChileLogo from "../imports/cetchileCla.png";
+import PanelAcceso from "../components/PanelAcceso";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -14,58 +14,24 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
-    setTimeout(() => {
-      const ok = login(email, password);
-      setLoading(false);
-      if (ok) {
-        navigate("/dashboard/inicio");
-      } else {
-        setError("Correo o contraseña incorrectos. Verifica tus credenciales.");
-      }
-    }, 400);
+    await new Promise((r) => setTimeout(r, 300));
+    const resultado = await login(email, password);
+    setLoading(false);
+    if (resultado.ok) {
+      navigate("/dashboard/inicio");
+    } else {
+      setError(resultado.error ?? "Correo o contraseña incorrectos. Verifica tus credenciales.");
+    }
   }
 
   return (
     <div className="min-h-screen flex" style={{ background: "var(--bg)" }}>
       {/* Left panel */}
-      <div
-        className="hidden lg:flex flex-col justify-between w-[520px] shrink-0 p-10 relative overflow-hidden"
-        style={{ background: "linear-gradient(160deg, #0a2040 0%, #0d3068 60%, #0a1628 100%)" }}
-      >
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              "linear-gradient(var(--teal) 1px, transparent 1px), linear-gradient(90deg, var(--teal) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-        <div className="relative z-10">
-          <img src={cetChileLogo} alt="CET CHILE" className="h-16 w-auto object-contain" />
-        </div>
-        <div className="relative z-10">
-          <span
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono mb-6"
-            style={{ background: "rgba(43,191,175,0.15)", color: "var(--teal)", border: "1px solid rgba(43,191,175,0.3)" }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-            S6SC v1.0
-          </span>
-          <h1 className="text-white text-4xl font-bold leading-tight mb-4">
-            Sistema de Gestión de Solicitudes Corporativas
-          </h1>
-          <p className="text-white/60 text-base leading-relaxed">
-            Coordina espacios, activos, personal y materiales desde un solo panel. Diseñado para el flujo interno de CET Chile.
-          </p>
-        </div>
-        <p className="relative z-10 text-white/30 text-xs">
-          © 2026 Corporación Educacional Tecnológica de Chile
-        </p>
-      </div>
+      <PanelAcceso />
 
       {/* Right panel */}
       <div className="flex-1 flex flex-col items-center justify-center p-8" style={{ background: "var(--surface)" }}>
@@ -176,6 +142,18 @@ export default function LoginPage() {
               {loading ? "Verificando…" : "Ingresar al sistema →"}
             </button>
           </form>
+
+          <p className="text-center text-sm mt-5" style={{ color: "var(--text-muted)" }}>
+            ¿No tienes cuenta?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/registro")}
+              className="font-semibold transition-opacity hover:opacity-80"
+              style={{ color: "var(--teal)" }}
+            >
+              Regístrate aquí
+            </button>
+          </p>
 
           <p className="text-center text-xs mt-8" style={{ color: "var(--text-muted)" }}>
             CET Chile · Sistema de Gestión de Solicitudes Corporativas

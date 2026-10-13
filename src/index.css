@@ -49,6 +49,95 @@ body {
   --blue: #3182ce;
 }
 
+/* =========================================================
+   Escala responsiva proporcional
+   - PC 16:9 (1920x1080): valores máximos, contenido centrado
+   - Tablet/Móvil: valores mínimos, 1 columna
+   ========================================================= */
+:root {
+  /* Padding de página: 16px en móvil → 32px en 16:9 */
+  --page-pad: clamp(1rem, 0.45rem + 1.1vw, 2rem);
+
+  /* Ancho máximo del contenido dentro del dashboard */
+  --container-max: clamp(1080px, 78vw, 1500px);
+
+  /* Ancho máximo para formularios / lectura */
+  --form-max: clamp(640px, 62vw, 1180px);
+
+  /* Títulos proporcionales */
+  --fs-h1: clamp(1.25rem, 0.85rem + 0.75vw, 1.75rem);
+  --fs-h2: clamp(1.1rem, 0.8rem + 0.5vw, 1.4rem);
+  --fs-body: clamp(0.8125rem, 0.75rem + 0.2vw, 0.9rem);
+  --fs-label: clamp(0.6875rem, 0.62rem + 0.2vw, 0.75rem);
+
+  /* Radio y separación */
+  --gap: clamp(0.75rem, 0.4rem + 0.6vw, 1.25rem);
+}
+
+/* Ancho del panel lateral de login/registro (solo desktop) */
+.panel-login {
+  width: clamp(360px, 34vw, 580px);
+}
+
+/* Contenedor proporcional de página (dentro del dashboard) */
+.page {
+  padding: var(--page-pad);
+}
+.page-narrow {
+  max-width: var(--form-max);
+  margin-inline: auto;
+}
+.page-wide {
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+.page-title {
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+}
+.page-subtitle {
+  font-size: var(--fs-body);
+  margin-top: 0.35rem;
+  color: var(--text-muted);
+}
+.section-title {
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Tarjeta base reutilizable */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+/* Grilla proporcional: 1 col móvil → 2 tablet → N en 16:9 */
+.grid-responsive {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1440px) {
+  .grid-responsive {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .dark {
   --bg: #0a1628;
   --bg-secondary: #071020;

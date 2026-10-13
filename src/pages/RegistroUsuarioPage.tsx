@@ -62,7 +62,7 @@ export default function RegistroUsuarioPage() {
   }
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="page">
       {submitted && (
         <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: "rgba(0,0,0,0.5)" }}>
           <div className="rounded-2xl p-8 text-center" style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
@@ -78,8 +78,8 @@ export default function RegistroUsuarioPage() {
       )}
 
       <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--text)" }}>Registro de Usuarios</h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+        <h1 className="page-title">Registro de Usuarios</h1>
+        <p className="page-subtitle">
           Administra los accesos al sistema
         </p>
       </div>
@@ -87,7 +87,7 @@ export default function RegistroUsuarioPage() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Usuarios registrados — izquierda */}
         <div className="lg:col-span-3">
-          <div className="rounded-2xl overflow-hidden" style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
+          <div className="card overflow-hidden">
             <div className="px-5 py-3" style={{ borderBottom: "1px solid var(--border)" }}>
               <h2 className="text-sm font-bold" style={{ color: "var(--text)" }}>Usuarios del sistema</h2>
             </div>

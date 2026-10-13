@@ -1,3 +1,4 @@
 {
-  "apiUrl": ""
+  "supabaseUrl": "https://phvgpofsrevppuzpcnbi.supabase.co",
+  "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodmdwb2ZzcmV2cHB1enBjbmJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4MjQxMTQsImV4cCI6MjEwNzQwMDExNH0.rohYCqYLsqP18cgAcd3y9u4W3Cr1Y8i5yIgu8bPP-iI"
 }

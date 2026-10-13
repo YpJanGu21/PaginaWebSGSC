@@ -1,18 +1,18 @@
 export default function ReportesPage() {
   return (
-    <div className="p-4 md:p-6">
+    <div className="page">
       <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--text)" }}>
+        <h1 className="page-title">
           Reportes y Estadísticas
         </h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+        <p className="page-subtitle">
           Panel de control — Indicadores del uso de Recursos y rendimiento del sistema
         </p>
       </div>
 
       <div
-        className="rounded-2xl p-6 md:p-10 flex flex-col items-center justify-center text-center"
-        style={{ background: "var(--surface)", border: "1px solid var(--border)", minHeight: "320px" }}
+        className="card p-6 md:p-10 flex flex-col items-center justify-center text-center"
+        style={{ minHeight: "320px" }}
       >
         <div
           className="w-14 h-14 rounded-full flex items-center justify-center mb-4"

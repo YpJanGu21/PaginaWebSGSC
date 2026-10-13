@@ -264,7 +264,9 @@ export default function DashboardLayout() {
 
         {/* Main content */}
         <main className="flex-1 overflow-auto">
-          <Outlet />
+          <div className="page-wide mx-auto min-h-full">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

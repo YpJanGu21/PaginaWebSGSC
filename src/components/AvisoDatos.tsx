@@ -13,9 +13,10 @@ export default function AvisoDatos() {
           color: "var(--text)",
         }}
       >
-        <strong>Modo local:</strong> no se encontró la API de solicitudes, así que los registros se guardan en este
-        dispositivo. Para guardarlos en la base de datos SQLite, ejecuta <code>npm run server</code> y define la URL de
-        la API en el archivo <code>config.json</code> (o usa la variable <code>VITE_API_URL</code> al compilar).
+        <strong>Modo local:</strong> no se pudo conectar con Supabase, así que los registros se guardan en este
+        dispositivo. Para guardarlos en la base de datos en la nube, completa <code>supabaseUrl</code> y{" "}
+        <code>supabaseAnonKey</code> en el archivo <code>config.json</code> (o usa las variables{" "}
+        <code>VITE_SUPABASE_URL</code> y <code>VITE_SUPABASE_ANON_KEY</code> al compilar).
       </div>
     );
   }

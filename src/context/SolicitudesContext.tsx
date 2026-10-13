@@ -1,52 +1,16 @@
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
-import { apiGet, apiPost, apiPatch, ApiError } from "../lib/api";
+import {
+  ApiError,
+  obtenerSolicitudes,
+  crearSolicitud,
+  actualizarEstado,
+  type EstadoSolicitud,
+  type Solicitud,
+  type NuevaSolicitud,
+} from "../lib/api";
 
-export type EstadoSolicitud =
-  | "Pendiente"
-  | "Aprobada"
-  | "En Espera"
-  | "En Revisión"
-  | "Aprobado"
-  | "Rechazada"
-  | "Declinado"
-  | "Cancelada"
-  | "Cerrada";
-
+export type { EstadoSolicitud, Solicitud, NuevaSolicitud };
 export type ModoDatos = "cargando" | "api" | "local";
-
-export interface Solicitud {
-  id: string;
-  recurso: string;
-  recursoId?: string;
-  solicitante: string;
-  departamento: string;
-  responsable: string;
-  fechaSolicitud: string;
-  fechaReserva?: string;
-  inicio: string;
-  termino: string;
-  horaInicio: string;
-  horaFin: string;
-  descripcion: string;
-  estado: EstadoSolicitud;
-  observacionCierre?: string;
-  adicionales?: Record<string, string | boolean>;
-}
-
-export interface NuevaSolicitud {
-  recurso: string;
-  recursoId?: string;
-  solicitante: string;
-  departamento: string;
-  responsable: string;
-  fechaReserva: string;
-  inicio: string;
-  termino: string;
-  horaInicio: string;
-  horaFin: string;
-  descripcion: string;
-  adicionales?: Record<string, string | boolean>;
-}
 
 interface SolicitudesState {
   solicitudes: Solicitud[];
@@ -102,7 +66,7 @@ export function SolicitudesProvider({ children }: { children: React.ReactNode })
     let vivo = true;
     (async () => {
       try {
-        const data = await apiGet<Solicitud[]>("/api/solicitudes");
+        const data = await obtenerSolicitudes();
         if (!vivo) return;
         setSolicitudes(data);
         setModo("api");
@@ -122,7 +86,7 @@ export function SolicitudesProvider({ children }: { children: React.ReactNode })
     async (s: NuevaSolicitud) => {
       if (modo === "api") {
         try {
-          const creada = await apiPost<Solicitud>("/api/solicitudes", s);
+          const creada = await crearSolicitud(s);
           setSolicitudes((prev) => [creada, ...prev]);
           setErrorApi(null);
           return;
@@ -153,10 +117,7 @@ export function SolicitudesProvider({ children }: { children: React.ReactNode })
     async (id: string, nuevoEstado: EstadoSolicitud, observacion?: string) => {
       if (modo === "api") {
         try {
-          const actualizada = await apiPatch<Solicitud>(`/api/solicitudes/${encodeURIComponent(id)}`, {
-            estado: nuevoEstado,
-            ...(nuevoEstado === "Cerrada" ? { observacionCierre: observacion ?? "" } : {}),
-          });
+          const actualizada = await actualizarEstado(id, nuevoEstado, observacion);
           setSolicitudes((prev) => prev.map((s) => (s.id === id || s.id === actualizada.id ? actualizada : s)));
           setErrorApi(null);
           return;

@@ -23,12 +23,12 @@ export default function InicioPage() {
   ).length;
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="page">
       <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--text)" }}>
+        <h1 className="page-title">
           Bienvenido, {user?.nombre ?? "Usuario"}
         </h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+        <p className="page-subtitle">
           CET CHILE · Sistema de Gestión de Solicitudes Corporativas
         </p>
       </div>
@@ -48,8 +48,7 @@ export default function InicioPage() {
           <button
             key={c.label}
             onClick={c.action}
-            className="rounded-xl p-4 text-left transition-transform hover:-translate-y-0.5"
-            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+            className="card p-4 text-left transition-transform hover:-translate-y-0.5"
           >
             <div className="mb-2" style={{ color: "var(--teal)" }}>{c.icon}</div>
             <p className="text-xs mb-1" style={{ color: "var(--text-muted)" }}>{c.label}</p>
@@ -69,15 +68,14 @@ export default function InicioPage() {
           Ver todos
         </button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid-responsive">
         {recursos.map((r) => {
           const s = estadoColor[r.estado] ?? estadoColor["Disponible"];
           return (
             <div
               key={r.id}
               onClick={() => navigate(`/dashboard/recursos/${r.id}`)}
-              className="rounded-xl overflow-hidden cursor-pointer transition-transform hover:-translate-y-0.5 hover:shadow-lg"
-              style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+              className="card overflow-hidden cursor-pointer transition-transform hover:-translate-y-0.5 hover:shadow-lg"
             >
               {r.image ? (
                 <img src={r.image} alt={r.nombre} className="w-full h-44 md:h-52 object-cover" />

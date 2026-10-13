@@ -57,7 +57,7 @@ export default function GestionSolicitudesPage() {
   const transiciones = seleccionada ? (estadosTransicion[seleccionada.estado] ?? []) : [];
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="page">
       {/* Modal detalle */}
       {showModal && seleccionada && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.55)" }}>
@@ -222,8 +222,8 @@ export default function GestionSolicitudesPage() {
       )}
 
       <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--text)" }}>Gestión de Solicitudes</h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+        <h1 className="page-title">Gestión de Solicitudes</h1>
+        <p className="page-subtitle">
           Revisa, aprueba y gestiona el estado de las solicitudes en curso
         </p>
       </div>
@@ -256,7 +256,7 @@ export default function GestionSolicitudesPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl overflow-hidden" style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
+      <div className="card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm tabla-scroll min-w-[920px]">
             <thead>
@@ -315,6 +315,12 @@ export default function GestionSolicitudesPage() {
               })}
             </tbody>
           </table>
+        </div>
+        <div
+          className="px-4 py-2 text-xs tabla-scroll md:hidden"
+          style={{ borderTop: "1px solid var(--border)", color: "var(--text-muted)" }}
+        >
+          Desliza la tabla horizontalmente →
         </div>
       </div>
     </div>

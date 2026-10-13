@@ -71,12 +71,12 @@ export default function SolicitudesPage() {
   const pctEspera = totalSolicitudes > 0 ? Math.round((enEspera / totalSolicitudes) * 100) : 0;
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="page">
       <div className="mb-5">
-        <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--text)" }}>
+        <h1 className="page-title">
           Tabla de seguimiento
         </h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+        <p className="page-subtitle">
           Seguimiento de solicitudes y su estado actual
         </p>
       </div>
@@ -92,10 +92,7 @@ export default function SolicitudesPage() {
       <AvisoDatos />
 
       {/* Table card */}
-      <div
-        className="rounded-xl overflow-hidden"
-        style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-      >
+      <div className="card overflow-hidden">
         {/* Table toolbar */}
         <div
           className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between px-4 py-3"
@@ -205,6 +202,12 @@ export default function SolicitudesPage() {
               })}
             </tbody>
           </table>
+        </div>
+        <div
+          className="px-4 py-2 text-xs tabla-scroll md:hidden"
+          style={{ borderTop: "1px solid var(--border)", color: "var(--text-muted)" }}
+        >
+          Desliza la tabla horizontalmente →
         </div>
       </div>
     </div>

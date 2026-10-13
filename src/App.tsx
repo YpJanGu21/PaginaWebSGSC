@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import type { Rol } from "./context/AuthContext";
 import { SolicitudesProvider } from "./context/SolicitudesContext";
 import LoginPage from "./pages/LoginPage";
+import RegistroPage from "./pages/RegistroPage";
 import DashboardLayout from "./pages/DashboardLayout";
 import InicioPage from "./pages/InicioPage";
 import RecursosPage from "./pages/RecursosPage";
@@ -26,10 +27,16 @@ function RootRedirect() {
   return user ? <Navigate to="/dashboard/inicio" replace /> : <LoginPage />;
 }
 
+function RegistroRoute() {
+  const { user } = useAuth();
+  return user ? <Navigate to="/dashboard/inicio" replace /> : <RegistroPage />;
+}
+
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<RootRedirect />} />
+      <Route path="/registro" element={<RegistroRoute />} />
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<InicioPage />} />
         <Route path="inicio" element={<InicioPage />} />

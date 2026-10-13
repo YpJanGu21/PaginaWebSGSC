@@ -72,26 +72,25 @@ export default function RecursosPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="page">
       <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--text)" }}>
+        <h1 className="page-title">
           Recursos
         </h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+        <p className="page-subtitle">
           Espacios y activos disponibles para reserva
         </p>
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid-responsive">
         {recursos.map((r) => {
           const s = estadoColor[r.estado] ?? estadoColor["Disponible"];
           return (
             <div
               key={r.id}
               onClick={() => navigate(`/dashboard/recursos/${r.id}`)}
-              className="rounded-xl overflow-hidden cursor-pointer transition-transform hover:-translate-y-0.5 hover:shadow-lg"
-              style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+              className="card overflow-hidden cursor-pointer transition-transform hover:-translate-y-0.5 hover:shadow-lg"
             >
               {r.image ? (
                 <img

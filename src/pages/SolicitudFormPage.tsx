@@ -136,6 +136,20 @@ function focusHandlers(e: React.FocusEvent<HTMLElement>, active: boolean) {
   e.target.style.borderColor = active ? "var(--teal)" : "var(--border)";
 }
 
+function DatoResumen({ label, value, destacado }: { label: string; value: string; destacado?: boolean }) {
+  return (
+    <div className="flex items-start justify-between gap-3 py-2" style={{ borderBottom: "1px solid var(--border)" }}>
+      <span className="text-xs shrink-0" style={{ color: "var(--text-muted)" }}>{label}</span>
+      <span
+        className={`text-xs text-right font-medium ${destacado ? "font-semibold" : ""}`}
+        style={{ color: value ? "var(--text)" : "var(--text-muted)" }}
+      >
+        {value || "—"}
+      </span>
+    </div>
+  );
+}
+
 export default function SolicitudFormPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -254,8 +268,14 @@ export default function SolicitudFormPage() {
     }
   }
 
+  const participantes =
+    (adicionales["Número de participantes"] as string) ||
+    (adicionales["Número de asistentes"] as string) ||
+    (adicionales["Número de asistentes esperados"] as string) ||
+    "";
+
   return (
-    <div className="p-4 md:p-6 max-w-3xl mx-auto">
+    <div className="page page-narrow">
       {submitted && (
         <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: "rgba(0,0,0,0.5)" }}>
           <div className="rounded-2xl p-8 text-center" style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
@@ -281,16 +301,17 @@ export default function SolicitudFormPage() {
           </svg>
           Volver
         </button>
-        <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--text)" }}>Registro de Solicitud</h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-          Completa los datos para solicitar la reserva de un recurso
-        </p>
+        <h1 className="page-title">Registro de Solicitud</h1>
+        <p className="page-subtitle">Completa los datos para solicitar la reserva de un recurso</p>
       </div>
 
-      <div className="rounded-2xl p-4 md:p-6" style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-
-          {/* Sección: Recurso */}
+      {/* 2 columnas en desktop 16:9 — 1 columna apilada en móvil/tablet */}
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-start"
+      >
+        {/* 1. Recurso + solicitante (izq) */}
+        <section className="card p-4 md:p-6 space-y-4 lg:col-start-1 lg:row-start-1">
           <SectionTitle>Recurso a solicitar</SectionTitle>
           <Field label="Recurso a solicitar" required>
             <select
@@ -306,174 +327,169 @@ export default function SolicitudFormPage() {
             </select>
           </Field>
 
-          {/* Sección: Datos del solicitante */}
           <SectionTitle>Datos del solicitante</SectionTitle>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="Solicitante" required>
-              <input
-                type="text"
-                value={loggedUser.nombre}
-                readOnly
-                style={{ ...inputStyle, opacity: 0.7, cursor: "not-allowed" }}
-              />
-            </Field>
-            <Field label="Correo electrónico" required>
-              <input
-                type="email"
-                value={loggedUser.email}
-                readOnly
-                style={{ ...inputStyle, opacity: 0.7, cursor: "not-allowed" }}
-              />
-            </Field>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="Responsable de la actividad" required>
-              <input
-                type="text"
-                value={responsable}
-                onChange={(e) => setResponsable(e.target.value)}
-                placeholder="Nombre del responsable"
-                style={inputStyle}
-                onFocus={(e) => focusHandlers(e, true)}
-                onBlur={(e) => focusHandlers(e, false)}
-              />
-            </Field>
-          </div>
+          <Field label="Solicitante" required>
+            <input
+              type="text"
+              value={loggedUser.nombre}
+              readOnly
+              style={{ ...inputStyle, opacity: 0.7, cursor: "not-allowed" }}
+            />
+          </Field>
+          <Field label="Correo electrónico" required>
+            <input
+              type="email"
+              value={loggedUser.email}
+              readOnly
+              style={{ ...inputStyle, opacity: 0.7, cursor: "not-allowed" }}
+            />
+          </Field>
+          <Field label="Responsable de la actividad" required>
+            <input
+              type="text"
+              value={responsable}
+              onChange={(e) => setResponsable(e.target.value)}
+              placeholder="Nombre del responsable"
+              style={inputStyle}
+              onFocus={(e) => focusHandlers(e, true)}
+              onBlur={(e) => focusHandlers(e, false)}
+            />
+          </Field>
+        </section>
 
-          {/* Sección: Fecha y hora */}
+        {/* 2. Fecha y horario (der) */}
+        <section className="card p-4 md:p-6 space-y-4 lg:col-start-2 lg:row-start-1">
           <SectionTitle>Fecha y horario</SectionTitle>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Fecha reservada" required>
-              <CalendarioReserva
-                value={fechaReserva}
-                onChange={setFechaReserva}
-                fechasReservadas={fechasReservadas}
-              />
-              <p className="text-[11px] mt-1.5" style={{ color: "var(--text-muted)" }}>
-                Solo lunes a viernes. Las fechas en rojo ya están reservadas y no pueden volver a usarse.
-              </p>
-            </Field>
-            <div className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <Field label="Hora inicio" required>
-                  <select
-                    value={horaInicio}
-                    onChange={(e) => setHoraInicio(e.target.value)}
-                    style={selectStyle}
-                    onFocus={(e) => focusHandlers(e, true)}
-                    onBlur={(e) => focusHandlers(e, false)}
-                  >
-                    <option value="" style={{ background: "var(--surface)" }}>Seleccionar…</option>
-                    {HORAS.map((h) => (
-                      <option key={h} value={h} style={{ background: "var(--surface)" }}>{h}</option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label="Hora término" required>
-                  <select
-                    value={horaFin}
-                    onChange={(e) => setHoraFin(e.target.value)}
-                    style={selectStyle}
-                    onFocus={(e) => focusHandlers(e, true)}
-                    onBlur={(e) => focusHandlers(e, false)}
-                  >
-                    <option value="" style={{ background: "var(--surface)" }}>Seleccionar…</option>
-                    {HORAS.map((h) => (
-                      <option key={h} value={h} style={{ background: "var(--surface)" }}>{h}</option>
-                    ))}
-                  </select>
-                </Field>
-              </div>
-              <div
-                className="rounded-lg px-3 py-2.5 text-xs"
-                style={{ background: "var(--surface-2)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
-              >
-                Horario permitido: <strong style={{ color: "var(--text)" }}>08:00 a 17:00</strong>. La reserva solo se registra de lunes a viernes.
-              </div>
-              {fechaReserva && (
-                <div
-                  className="rounded-lg px-3 py-2.5 text-xs"
-                  style={{ background: "var(--teal-light)", border: "1px solid var(--teal)", color: "var(--text)" }}
-                >
-                  Fecha seleccionada: <strong>{fechaReserva}</strong>
-                  {horaInicio && horaFin && (
-                    <> · {horaInicio} a {horaFin}</>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+          <Field label="Fecha reservada" required>
+            <CalendarioReserva
+              value={fechaReserva}
+              onChange={setFechaReserva}
+              fechasReservadas={fechasReservadas}
+            />
+            <p className="text-[11px] mt-1.5" style={{ color: "var(--text-muted)" }}>
+              Solo lunes a viernes. Las fechas en rojo ya están reservadas y no pueden volver a usarse.
+            </p>
+          </Field>
 
-          {/* Sección: Actividad */}
-          <SectionTitle>Datos de la actividad</SectionTitle>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="Tipo de actividad" required>
+            <Field label="Hora inicio" required>
               <select
-                value={tipoActividad}
-                onChange={(e) => {
-                  setTipoActividad(e.target.value);
-                  setDetalleActividad("");
-                  setSillas("");
-                  setArbitro("");
-                }}
+                value={horaInicio}
+                onChange={(e) => setHoraInicio(e.target.value)}
                 style={selectStyle}
                 onFocus={(e) => focusHandlers(e, true)}
                 onBlur={(e) => focusHandlers(e, false)}
               >
                 <option value="" style={{ background: "var(--surface)" }}>Seleccionar…</option>
-                {opcionesActividad.map((o) => (
+                {HORAS.map((h) => (
+                  <option key={h} value={h} style={{ background: "var(--surface)" }}>{h}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Hora término" required>
+              <select
+                value={horaFin}
+                onChange={(e) => setHoraFin(e.target.value)}
+                style={selectStyle}
+                onFocus={(e) => focusHandlers(e, true)}
+                onBlur={(e) => focusHandlers(e, false)}
+              >
+                <option value="" style={{ background: "var(--surface)" }}>Seleccionar…</option>
+                {HORAS.map((h) => (
+                  <option key={h} value={h} style={{ background: "var(--surface)" }}>{h}</option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          <div
+            className="rounded-lg px-3 py-2.5 text-xs"
+            style={{ background: "var(--surface-2)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          >
+            Horario permitido: <strong style={{ color: "var(--text)" }}>08:00 a 17:00</strong>. La reserva solo se registra de lunes a viernes.
+          </div>
+          {fechaReserva && (
+            <div
+              className="rounded-lg px-3 py-2.5 text-xs"
+              style={{ background: "var(--teal-light)", border: "1px solid var(--teal)", color: "var(--text)" }}
+            >
+              Fecha seleccionada: <strong>{fechaReserva}</strong>
+              {horaInicio && horaFin && (
+                <> · {horaInicio} a {horaFin}</>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* 3. Actividad + requerimientos (izq) */}
+        <section className="card p-4 md:p-6 space-y-4 lg:col-start-1 lg:row-start-2">
+          <SectionTitle>Datos de la actividad</SectionTitle>
+          <Field label="Tipo de actividad" required>
+            <select
+              value={tipoActividad}
+              onChange={(e) => {
+                setTipoActividad(e.target.value);
+                setDetalleActividad("");
+                setSillas("");
+                setArbitro("");
+              }}
+              style={selectStyle}
+              onFocus={(e) => focusHandlers(e, true)}
+              onBlur={(e) => focusHandlers(e, false)}
+            >
+              <option value="" style={{ background: "var(--surface)" }}>Seleccionar…</option>
+              {opcionesActividad.map((o) => (
+                <option key={o} value={o} style={{ background: "var(--surface)" }}>{o}</option>
+              ))}
+            </select>
+          </Field>
+
+          {tipoActividad === "Otro" && (
+            <Field label="Especifique el tipo de actividad" required>
+              <input
+                type="text"
+                value={detalleActividad}
+                onChange={(e) => setDetalleActividad(e.target.value)}
+                placeholder="Describe el tipo de actividad…"
+                style={inputStyle}
+                onFocus={(e) => focusHandlers(e, true)}
+                onBlur={(e) => focusHandlers(e, false)}
+              />
+            </Field>
+          )}
+
+          {tipoActividad === "Charla Educativa" && (
+            <Field label="Cantidad de sillas necesarias" required>
+              <select
+                value={sillas}
+                onChange={(e) => setSillas(e.target.value)}
+                style={selectStyle}
+                onFocus={(e) => focusHandlers(e, true)}
+                onBlur={(e) => focusHandlers(e, false)}
+              >
+                <option value="" style={{ background: "var(--surface)" }}>Seleccionar cantidad…</option>
+                {OPCIONES_SILLAS.map((o) => (
                   <option key={o} value={o} style={{ background: "var(--surface)" }}>{o}</option>
                 ))}
               </select>
             </Field>
+          )}
 
-            {tipoActividad === "Otro" && (
-              <Field label="Especifique el tipo de actividad" required>
-                <input
-                  type="text"
-                  value={detalleActividad}
-                  onChange={(e) => setDetalleActividad(e.target.value)}
-                  placeholder="Describe el tipo de actividad…"
-                  style={inputStyle}
-                  onFocus={(e) => focusHandlers(e, true)}
-                  onBlur={(e) => focusHandlers(e, false)}
-                />
-              </Field>
-            )}
-
-            {tipoActividad === "Charla Educativa" && (
-              <Field label="Cantidad de sillas necesarias" required>
-                <select
-                  value={sillas}
-                  onChange={(e) => setSillas(e.target.value)}
-                  style={selectStyle}
-                  onFocus={(e) => focusHandlers(e, true)}
-                  onBlur={(e) => focusHandlers(e, false)}
-                >
-                  <option value="" style={{ background: "var(--surface)" }}>Seleccionar cantidad…</option>
-                  {OPCIONES_SILLAS.map((o) => (
-                    <option key={o} value={o} style={{ background: "var(--surface)" }}>{o}</option>
-                  ))}
-                </select>
-              </Field>
-            )}
-
-            {ACTIVIDADES_DEPORTIVAS.includes(tipoActividad) && (
-              <Field label="¿Requiere árbitro?" required>
-                <select
-                  value={arbitro}
-                  onChange={(e) => setArbitro(e.target.value)}
-                  style={selectStyle}
-                  onFocus={(e) => focusHandlers(e, true)}
-                  onBlur={(e) => focusHandlers(e, false)}
-                >
-                  <option value="" style={{ background: "var(--surface)" }}>Seleccionar…</option>
-                  <option value="Sí" style={{ background: "var(--surface)" }}>Sí</option>
-                  <option value="No" style={{ background: "var(--surface)" }}>No</option>
-                </select>
-              </Field>
-            )}
-          </div>
+          {ACTIVIDADES_DEPORTIVAS.includes(tipoActividad) && (
+            <Field label="¿Requiere árbitro?" required>
+              <select
+                value={arbitro}
+                onChange={(e) => setArbitro(e.target.value)}
+                style={selectStyle}
+                onFocus={(e) => focusHandlers(e, true)}
+                onBlur={(e) => focusHandlers(e, false)}
+              >
+                <option value="" style={{ background: "var(--surface)" }}>Seleccionar…</option>
+                <option value="Sí" style={{ background: "var(--surface)" }}>Sí</option>
+                <option value="No" style={{ background: "var(--surface)" }}>No</option>
+              </select>
+            </Field>
+          )}
 
           <Field label="Descripción de la actividad" required>
             <textarea
@@ -487,7 +503,6 @@ export default function SolicitudFormPage() {
             />
           </Field>
 
-          {/* Campos adicionales dinámicos */}
           {camposExtra.length > 0 && (
             <>
               <SectionTitle>Requerimientos de {recursoActual.nombre}</SectionTitle>
@@ -541,6 +556,29 @@ export default function SolicitudFormPage() {
               </div>
             </>
           )}
+        </section>
+
+        {/* 4. Resumen + envío (der) */}
+        <section className="lg:col-start-2 lg:row-start-2 space-y-4">
+          <div className="card p-4 md:p-6">
+            <SectionTitle>Resumen de la solicitud</SectionTitle>
+            <div className="mt-2">
+              <DatoResumen label="Recurso" value={recursoActual.nombre} destacado />
+              <DatoResumen label="Solicitante" value={loggedUser.nombre} />
+              <DatoResumen label="Responsable" value={responsable} />
+              <DatoResumen label="Fecha" value={fechaReserva} destacado />
+              <DatoResumen
+                label="Horario"
+                value={horaInicio && horaFin ? `${horaInicio} – ${horaFin}` : ""}
+              />
+              <DatoResumen label="Tipo de actividad" value={tipoActividad === "Otro" ? detalleActividad : tipoActividad} />
+              <DatoResumen label="Participantes" value={participantes} />
+            </div>
+            <div className="mt-4 flex items-center gap-2 text-xs" style={{ color: "var(--text-muted)" }}>
+              <span className="w-2 h-2 rounded-full" style={{ background: "var(--yellow)" }} />
+              Estado: <strong style={{ color: "var(--text)" }}>Borrador</strong> · se enviará como <strong style={{ color: "var(--text)" }}>Pendiente</strong>
+            </div>
+          </div>
 
           {error && (
             <div
@@ -551,18 +589,16 @@ export default function SolicitudFormPage() {
             </div>
           )}
 
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={enviando}
-              className="w-full py-3 rounded-xl text-sm font-bold transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ background: "var(--yellow)", color: "#1a1a1a" }}
-            >
-              {enviando ? "Enviando…" : "Enviar Solicitud"}
-            </button>
-          </div>
-        </form>
-      </div>
+          <button
+            type="submit"
+            disabled={enviando}
+            className="w-full py-3 rounded-xl text-sm font-bold transition-opacity hover:opacity-90 disabled:opacity-50"
+            style={{ background: "var(--yellow)", color: "#1a1a1a" }}
+          >
+            {enviando ? "Enviando…" : "Enviar Solicitud"}
+          </button>
+        </section>
+      </form>
     </div>
   );
 }

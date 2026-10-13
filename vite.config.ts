@@ -9,7 +9,9 @@ const siteConfig = {
 }
 
 export default defineConfig({
-  base: './',
+  // Rutas absolutas: con './' las rutas profundas (/dashboard/solicitudes) pedían
+  // /dashboard/assets/*.js y Netlify devolvía index.html (MIME text/html) => pantalla en blanco.
+  base: '/',
   build: {
     sourcemap: false,
     minify: true,
