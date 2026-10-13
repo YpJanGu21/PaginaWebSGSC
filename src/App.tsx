@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import type { Rol } from "./context/AuthContext";
@@ -9,11 +10,13 @@ import InicioPage from "./pages/InicioPage";
 import RecursosPage from "./pages/RecursosPage";
 import RecursoDetallePage from "./pages/RecursoDetallePage";
 import SolicitudesPage from "./pages/SolicitudesPage";
-import ReportesPage from "./pages/ReportesPage";
 import SolicitudFormPage from "./pages/SolicitudFormPage";
 import CuentaPage from "./pages/CuentaPage";
 import RegistroUsuarioPage from "./pages/RegistroUsuarioPage";
 import GestionSolicitudesPage from "./pages/GestionSolicitudesPage";
+
+// recharts pesa ~400 kB: se carga solo al abrir Reportes
+const ReportesPage = lazy(() => import("./pages/ReportesPage"));
 
 function ProtectedRoute({ roles, children }: { roles: Rol[]; children: React.ReactNode }) {
   const { user } = useAuth();
@@ -63,7 +66,19 @@ function AppRoutes() {
         />
         <Route
           path="reportes"
-          element={<ProtectedRoute roles={["supervisor"]}><ReportesPage /></ProtectedRoute>}
+          element={
+            <ProtectedRoute roles={["supervisor"]}>
+              <Suspense
+                fallback={
+                  <div className="page flex items-center justify-center" style={{ minHeight: "320px" }}>
+                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>Cargando reportes…</p>
+                  </div>
+                }
+              >
+                <ReportesPage />
+              </Suspense>
+            </ProtectedRoute>
+          }
         />
         <Route
           path="registro-usuario"

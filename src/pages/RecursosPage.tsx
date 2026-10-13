@@ -3,6 +3,8 @@ import PlaceholderRecurso from "../components/PlaceholderRecurso";
 import canchaMM from "../imports/canchaMM.jpeg";
 import canchaPV from "../imports/CanchaPV.jpeg";
 import escenarioPV from "../imports/Escenario_PV.jpeg";
+import auditorioImg from "../imports/Auditorio.jpeg";
+import gimnasioImg from "../imports/Gimnasio.jpeg";
 
 const recursos = [
   {
@@ -47,7 +49,7 @@ const recursos = [
     tasa: 50,
     diasUso: 10,
     calificacion: 4.4,
-    image: undefined,
+    image: auditorioImg,
   },
   {
     id: "gimnasio-manuel-mont",
@@ -58,7 +60,7 @@ const recursos = [
     tasa: 70,
     diasUso: 18,
     calificacion: 4.7,
-    image: undefined,
+    image: gimnasioImg,
   },
 ];
 
